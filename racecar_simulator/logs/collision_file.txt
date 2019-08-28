@@ -1,20 +1,20 @@
 Collision #1 detected:
-TTC: 0.00687833 seconds
-Angle to obstacle: -0.282423 radians
-Time since start of sim: 23.7614 seconds
+TTC: 0.0081901 seconds
+Angle to obstacle: -3.10083 radians
+Time since start of sim: 70.7847 seconds
 
 Collision #2 detected:
-TTC: 0.00807158 seconds
-Angle to obstacle: -0.0378506 radians
-Time since start of sim: 23.7614 seconds
+TTC: 0.00252276 seconds
+Angle to obstacle: -1.21995 radians
+Time since start of sim: 79.6346 seconds
 
 Collision #3 detected:
-TTC: 0.00111963 seconds
-Angle to obstacle: -0.381417 radians
-Time since start of sim: 23.762 seconds
+TTC: 0.00223559 seconds
+Angle to obstacle: -1.28401 radians
+Time since start of sim: 79.636 seconds
 
 Collision #4 detected:
-TTC: 0.00702444 seconds
-Angle to obstacle: -0.0378506 radians
-Time since start of sim: 23.7713 seconds
+TTC: 0.00538338 seconds
+Angle to obstacle: -1.24907 radians
+Time since start of sim: 79.6365 seconds
 
