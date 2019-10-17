@@ -237,7 +237,7 @@ public:
 
 
         // steering delay buffer
-        steering_buffer = std::std::vector<double>(buffer_length);
+        steering_buffer = std::vector<double>(buffer_length);
 
         // OBSTACLE BUTTON:
         // wait for one map message to get the map data array
