@@ -14,6 +14,7 @@
 
 #include <sensor_msgs/LaserScan.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
+#include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/PointStamped.h>
 
 #include "racecar_simulator/pose_2d.hpp"
@@ -83,7 +84,9 @@ private:
 
     // Publish a scan, odometry, and imu data
     bool broadcast_transform;
+    bool pub_gt_pose;
     ros::Publisher scan_pub;
+    ros::Publisher pose_pub;
     ros::Publisher odom_pub;
     ros::Publisher imu_pub;
 
@@ -135,7 +138,7 @@ public:
         previous_seconds = ros::Time::now().toSec();
 
         // Get the topic names
-        std::string drive_topic, map_topic, scan_topic, pose_topic, 
+        std::string drive_topic, map_topic, scan_topic, pose_topic, gt_pose_topic, 
         pose_rviz_topic, odom_topic, imu_topic;
         n.getParam("drive_topic", drive_topic);
         n.getParam("map_topic", map_topic);
@@ -144,6 +147,7 @@ public:
         n.getParam("odom_topic", odom_topic);
         n.getParam("pose_rviz_topic", pose_rviz_topic);
         n.getParam("imu_topic", imu_topic);
+        n.getParam("ground_truth_pose_topic", gt_pose_topic);
 
         // Get the transformation frame names
         n.getParam("map_frame", map_frame);
@@ -180,6 +184,7 @@ public:
 
         // Determine if we should broadcast
         n.getParam("broadcast_transform", broadcast_transform);
+        n.getParam("publish_ground_truth_pose", pub_gt_pose);
 
         // Get obstacle size parameter
         n.getParam("obstacle_size", obstacle_size);
@@ -201,6 +206,9 @@ public:
 
         // Make a publisher for publishing map with obstacles
         map_pub = n.advertise<nav_msgs::OccupancyGrid>("/map", 1);
+
+        // Make a publisher for ground truth pose
+        pose_pub = n.advertise<geometry_msgs::PoseStamped>(gt_pose_topic, 1);
 
         // Start a timer to output the pose
         update_pose_timer = n.createTimer(ros::Duration(update_pose_rate), &RacecarSimulator::update_pose, this);
@@ -591,6 +599,16 @@ public:
             t.rotation.z = quat.z();
             t.rotation.w = quat.w();
 
+            // publish ground truth pose
+            geometry_msgs::PoseStamped ps;
+            ps.header.frame_id = "/map";
+            ps.pose.position.x = state.x;
+            ps.pose.position.y = state.y;
+            ps.pose.orientation.x = quat.x();
+            ps.pose.orientation.y = quat.y();
+            ps.pose.orientation.z = quat.z();
+            ps.pose.orientation.w = quat.w();
+
             // Add a header to the transformation
             geometry_msgs::TransformStamped ts;
             ts.transform = t;
@@ -601,6 +619,9 @@ public:
             // Publish them
             if (broadcast_transform) {
                 br.sendTransform(ts);
+            }
+            if (pub_gt_pose) {
+                pose_pub.publish(ps);
             }
         }
 

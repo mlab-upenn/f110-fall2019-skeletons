@@ -92,6 +92,7 @@ map_topic: "/map"
 distance_transform_topic: "/dt"
 scan_topic: "/scan"
 pose_topic: "/pose"
+ground_truth_pose_topic: "/gt_pose"
 odom_topic: "/odom"
 imu_topic: "/imu"
 pose_rviz_topic: "/initialpose"
@@ -114,5 +115,5 @@ map_frame: "map"
 base_frame: "base_link"
 scan_frame: "laser"
 
-# Turn this off for mapping
 broadcast_transform: true
+publish_ground_truth_pose: true
