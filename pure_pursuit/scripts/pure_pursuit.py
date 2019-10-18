@@ -12,7 +12,7 @@ class PurePursuit(object):
     def __init__(self):
         # TODO: create ROS subscribers and publishers.
 
-    def scan_callback(self, scan_msg):
+    def pose_callback(self, pose_msg):
         # TODO: find the current waypoint to track using methods mentioned in lecture
 
         # TODO: transform goal point to vehicle frame of reference
