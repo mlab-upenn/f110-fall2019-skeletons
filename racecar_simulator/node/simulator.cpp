@@ -122,6 +122,10 @@ private:
     bool TTC = false;
     double ttc_threshold;
 
+    // steering delay
+    int buffer_length;
+    std::vector<double> steering_buffer;
+
 
 public:
 
@@ -148,6 +152,9 @@ public:
         n.getParam("pose_rviz_topic", pose_rviz_topic);
         n.getParam("imu_topic", imu_topic);
         n.getParam("ground_truth_pose_topic", gt_pose_topic);
+
+        // Get steering delay params
+        n.getParam("buffer_length", buffer_length);
 
         // Get the transformation frame names
         n.getParam("map_frame", map_frame);
@@ -235,7 +242,10 @@ public:
         cosines = Precompute::get_cosines(scan_beams, -scan_fov/2.0, scan_ang_incr);
         car_distances = Precompute::get_car_distances(scan_beams, params.wheelbase, width, 
                 scan_distance_to_base_link, -scan_fov/2.0, scan_ang_incr);
-        
+
+
+        // steering delay buffer
+        steering_buffer = std::vector<double>(buffer_length);
 
         // OBSTACLE BUTTON:
         // wait for one map message to get the map data array
@@ -297,7 +307,16 @@ public:
 
         // simulate P controller
         compute_accel(desired_speed);
-        set_steer_angle_vel(compute_steer_vel(desired_steer_ang));
+        double actual_ang = 0.0;
+        if (steering_buffer.size() < buffer_length) {
+            steering_buffer.push_back(desired_steer_ang);
+            actual_ang = 0.0;
+        } else {
+            steering_buffer.insert(steering_buffer.begin(), desired_steer_ang);
+            actual_ang = steering_buffer.back();
+            steering_buffer.pop_back();
+        }
+        set_steer_angle_vel(compute_steer_vel(actual_ang));
 
         // Update the pose
         ros::Time timestamp = ros::Time::now();
