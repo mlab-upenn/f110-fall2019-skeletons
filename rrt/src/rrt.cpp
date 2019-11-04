@@ -19,7 +19,7 @@ RRT::RRT(ros::NodeHandle &nh): nh_(nh), gen((std::random_device())()) {
 
     // TODO: Load parameters from yaml file, you could add your own parameters to the rrt_params.yaml file
     std::string pose_topic, scan_topic;
-    nh_.getParam("pose_topic", pf_topic);
+    nh_.getParam("pose_topic", pose_topic);
     nh_.getParam("scan_topic", scan_topic);
 
     // ROS publishers
